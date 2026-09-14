@@ -15,7 +15,6 @@ void fadeOutScreen(int startValue) {
 
 void checkPowerSaveTime() {
     return;
-
     unsigned long elapsed = millis() - previousMillis;
     int startDimmerBright = bruceConfig.bright / 3;
     int dimmerSetMs = bruceConfig.dimmerSet * 1000;
