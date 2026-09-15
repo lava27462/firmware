@@ -68,11 +68,11 @@ jobs:
               partitions: { bootloader_addr: "0x2000" },
             }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - id: build
         name: setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.13"
 
