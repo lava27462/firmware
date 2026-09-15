@@ -70,13 +70,13 @@ jobs:
           - { env: "WaveSentry-R1",                   family: "ESP32",}
           - { env: "LAUNCHER_WaveSentry-R1",          family: "ESP32",}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
         with:
           ref: refs/pull/${{ github.event.inputs.pr_number }}/merge
 
       - id: build
         name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.13"
 
