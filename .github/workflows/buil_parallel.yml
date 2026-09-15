@@ -97,11 +97,11 @@ jobs:
           - { env: "LAUNCHER_WaveSentry-R1",          family: "ESP32",}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - id: build
         name: setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: "3.13"
 
@@ -111,7 +111,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends gcc-multilib libc6-dev-i386
 
       - name: Cache pip
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.0
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
@@ -120,7 +120,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Cache PlatformIO Framework
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.0
         with:
           path: |
             ~/.platformio
@@ -130,7 +130,7 @@ jobs:
             ${{ runner.os }}-platformio-
 
       - name: PIO libraries cache
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.0
         with:
           path: |
             .pio/libdeps
