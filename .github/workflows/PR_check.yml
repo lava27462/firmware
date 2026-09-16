@@ -2,7 +2,7 @@
 name: Build and Push OR check-PR
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 on:
@@ -11,16 +11,16 @@ on:
       - main
       - dev
     paths:
-        - "**.yml"
-        - "**.h"
-        - "**.cpp"
-        - "**.py"
-        - "**.html"
-        - "**.css"
-        - "**.js"
-        - "**.ini"
-        - "**.json"
-        - "**.csv"
+      - "**.yml"
+      - "**.h"
+      - "**.cpp"
+      - "**.py"
+      - "**.html"
+      - "**.css"
+      - "**.js"
+      - "**.ini"
+      - "**.json"
+      - "**.csv"
 
   workflow_dispatch:
 
@@ -81,6 +81,24 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends gcc-multilib libc6-dev-i386
 
+      # Кэширование PlatformIO для ускорения сборки в 10 раз (совместимо с Node 24)
+      - name: Cache PlatformIO
+        uses: actions/cache@v4.2.0
+        with:
+          path: |
+            ~/.platformio
+            ${{ github.workspace }}/.pio
+          key: pio-${{ matrix.board.env }}-${{ hashFiles('**/platformio.ini') }}
+          restore-keys: |
+            pio-${{ matrix.board.env }}-
+
+       Tar-файлы кэша pip
+      - name: Cache Pip
+        uses: actions/cache@v4.2.0
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+
       - name: Install PlatformIO Core
         run: |
           pip install platformio requests esptool intelhex
@@ -104,6 +122,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Bruce-${{ matrix.board.env }}
-          path: Bruce-*.bin
+          path: .pio/build/${{ matrix.board.env }}/firmware.bin
           retention-days: 5
           if-no-files-found: error
