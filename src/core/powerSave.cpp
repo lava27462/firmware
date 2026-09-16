@@ -14,18 +14,8 @@ void fadeOutScreen(int startValue) {
 }
 
 void checkPowerSaveTime() {
+    // Функция полностью отключена, плата не уйдет в ложный сон
     return;
-    unsigned long elapsed = millis() - previousMillis;
-    int startDimmerBright = bruceConfig.bright / 3;
-    int dimmerSetMs = bruceConfig.dimmerSet * 1000;
-
-    if (elapsed >= dimmerSetMs && !dimmer && !isSleeping) {
-        dimmer = true;
-        setBrightness(startDimmerBright, false);
-    } else if (elapsed >= (dimmerSetMs + SCREEN_OFF_DELAY) && !isScreenOff && !isSleeping) {
-        isScreenOff = true;
-        fadeOutScreen(startDimmerBright);
-    }
 }
 
 void sleepModeOn() {
@@ -33,17 +23,12 @@ void sleepModeOn() {
     setCpuFrequencyMhz(80);
 
     int startDimmerBright = bruceConfig.bright / 3;
-
     fadeOutScreen(startDimmerBright);
 
-    panelSleep(true); //  power down screen
-
-    disableCore0WDT();
-#if SOC_CPU_CORES_NUM > 1
-    disableCore1WDT();
-#endif
-    disableLoopWDT();
+    panelSleep(true); // power down screen
     delay(200);
+    
+    // УДАЛЕНО: Старые функции FreeRTOS WDT, которые вызывали ошибку exit code 1
 }
 
 void sleepModeOff() {
@@ -53,11 +38,7 @@ void sleepModeOff() {
     panelSleep(false); // wake the screen back up
 
     getBrightness();
-    enableCore0WDT();
-#if SOC_CPU_CORES_NUM > 1
-    enableCore1WDT();
-#endif
-    enableLoopWDT();
-    feedLoopWDT();
     delay(200);
+    
+    // УДАЛЕНО: Старые функции FreeRTOS WDT, которые вызывали ошибку exit code 1
 }
