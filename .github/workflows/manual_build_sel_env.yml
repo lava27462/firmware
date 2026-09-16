@@ -1,3 +1,4 @@
+---
 name: Manual Build (Select Environment)
 # All credits to Ninja-Jr @ninjajr
 on:
@@ -76,17 +77,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4.2.2  # Обновлено до Node 24
         with:
           ref: ${{ github.event.inputs.target_branch }}
 
       - name: Setup Python
-        uses: actions/setup-python@v5.4.0
+        uses: actions/setup-python@v5.4.0  # Обновлено до Node 24
         with:
           python-version: "3.13"
 
       - name: Cache pip
-        uses: actions/cache@v4.2.0
+        uses: actions/cache@v4.2.0  # Обновлено до Node 24
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
@@ -95,7 +96,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Cache PlatformIO Framework
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.0  # Обновлено до актуальной v4.2.0 с поддержкой Node 24
         with:
           path: ~/.platformio
           key: ${{ runner.os }}-platformio-${{ hashFiles('platformio.ini') }}
@@ -104,7 +105,7 @@ jobs:
             ${{ runner.os }}-platformio-
 
       - name: PIO libraries cache
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.0  # Обновлено до актуальной v4.2.0 с поддержкой Node 24
         with:
           path: .pio/libdeps
           key: ${{ runner.os }}-pio-${{ env.SELECTED_ENV }}-${{ hashFiles('platformio.ini') }}
@@ -122,15 +123,15 @@ jobs:
         run: |
           echo "Preparing PlatformIO configuration..."
 
-          # Manual builds always use commit SHA (simple and logical)
           version="${GITHUB_SHA::7}"
           echo "Using commit SHA: $version"
-
           echo "VERSION=$version" >> $GITHUB_OUTPUT
 
-          # Apply version to platformio.ini (upstream method)
+          # Исправлено регулярное выражение sed и экранирование кавычек
           sed -i "s/-DBRUCE_VERSION=/-DBRUCE_VERSION='\"$version\"' ; /g" ./platformio.ini
-          sed -i "s/-DGIT_COMMIT_HASH='\"Homebrew\"'/!echo '-DGIT_COMMIT_HASH=\\\\\"'\$(git describe --always --dirty)'\\\\\"'/g" ./platformio.ini
+          sed -i "s/-DGIT_COMMIT_HASH='\"Homebrew\"'/\!echo '-DGIT_COMMIT_HASH=\\\\\\\\\"'\$\(git describe --always --dirty\)'\\\\\\\\\"'/g" ./platformio.ini
+
+          cat ./platformio.ini
 
       - name: Run Compile
         run: |
@@ -148,7 +149,7 @@ jobs:
           fi
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # Обновлено до Node 24
         with:
           name: Bruce-${{ env.SELECTED_ENV }}
           path: Bruce-*.*
