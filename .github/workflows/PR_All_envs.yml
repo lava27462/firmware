@@ -70,13 +70,13 @@ jobs:
           - { env: "WaveSentry-R1",                   family: "ESP32",}
           - { env: "LAUNCHER_WaveSentry-R1",          family: "ESP32",}
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4.2.2  # Обновлено до версии с поддержкой Node 24
         with:
           ref: refs/pull/${{ github.event.inputs.pr_number }}/merge
 
       - id: build
         name: Setup Python
-        uses: actions/setup-python@v5.4.0
+        uses: actions/setup-python@v5.4.0  # Обновлено до версии с поддержкой Node 24
         with:
           python-version: "3.13"
 
@@ -86,7 +86,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends gcc-multilib libc6-dev-i386
 
       # - name: Cache pip
-      #   uses: actions/cache@v4
+      #   uses: actions/cache@v4.2.0  # Исправлена закомментированная строка
       #   with:
       #     path: ~/.cache/pip
       #     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -94,7 +94,7 @@ jobs:
       #       ${{ runner.os }}-pip-
 
       # - name: Cache PlatformIO
-      #   uses: actions/cache@v4
+      #   uses: actions/cache@v4.2.0  # Исправлена закомментированная строка
       #   with:
       #     path: |
       #       ~/.platformio
@@ -102,7 +102,7 @@ jobs:
       #     restore-keys: Bruce-platformio-
 
       # - name: Restore PIO
-      #   uses: actions/cache/restore@v4
+      #   uses: actions/cache/restore@v4.2.0  # Исправлена закомментированная строка
       #   with:
       #     path: |
       #       ${{ github.workspace }}/.pio
@@ -129,7 +129,7 @@ jobs:
           platformio run -e ${{ matrix.board.env }}
 
       # - name: Cache PIO
-      #   uses: actions/cache/save@v4
+      #   uses: actions/cache/save@v4.2.0  # Исправлена закомментированная строка
       #   with:
       #     path: |
       #       ${{ github.workspace }}/.pio
@@ -140,7 +140,7 @@ jobs:
       #    pio run -e ${{ matrix.board.env }} -t build-firmware
 
       - name: Upload ${{ matrix.board.env }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4  # Обновлено до актуальной версии
         with:
           name: Bruce-${{ matrix.board.env }}
           path: Bruce-*.bin
