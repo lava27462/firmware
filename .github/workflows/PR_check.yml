@@ -28,15 +28,12 @@ jobs:
   compile_sketch:
     name: Build ${{ matrix.board.name }}
     runs-on: ubuntu-latest
-    
-       strategy:
+    strategy:
       fail-fast: false
       matrix:
         board:
-          # Оставляем только те окружения, которые соответствуют вашему чипу ESP32-S3
-          - { env: "m5stack-cardputer",               family: "ESP32-S3",}
-          - { env: "esp32-s3-devkitc-1",              family: "ESP32-S3",}
-          - { env: "lilygo-t-display-s3",             family: "ESP32-S3",}
+          - { env: "smoochiee-board",                 family: "ESP32-S3",}
+
 
     steps:
       - uses: actions/checkout@v4.2.2
